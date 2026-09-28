@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Ministerio Secretarial de la Magia</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at top, #1d3151 0%, #101827 45%, #05070d 100%);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .contenedor {
+      width: 100%;
+      max-width: 750px;
+      background: rgba(8, 14, 25, 0.95);
+      border: 2px solid #c6a75e;
+      border-radius: 24px;
+      padding: 35px;
+      text-align: center;
+
+      box-shadow:
+        0 0 30px rgba(198, 167, 94, .25),
+        0 0 80px rgba(0, 0, 0, .8);
+    }
+
+    .varita {
+      font-size: 65px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      color: #e6ce8d;
+      margin: 0;
+      font-size: clamp(28px, 5vw, 44px);
+    }
+
+    .subtitulo {
+      margin-top: 10px;
+      color: #b8c7dc;
+      font-size: 20px;
+    }
+
+    .estado {
+      margin-top: 30px;
+      padding: 20px;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .13);
+    }
+
+    #estadoPrincipal {
+      font-size: 21px;
+      font-weight: bold;
+    }
+
+    #estadoSecundario {
+      margin-top: 8px;
+      color: #b4bdc9;
+      font-family: Arial, sans-serif;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      border: none;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #activar {
+      background: linear-gradient(135deg, #e3c777, #9f7c35);
+      color: #111;
+    }
+
+    #activar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(227, 199, 119, .25);
+    }
+
+    #desactivar {
+      background: #354056;
+      color: white;
+      display: none;
+    }
+
+    .reconocido {
+      margin-top: 30px;
+      background: rgba(0,0,0,.3);
+      padding: 16px;
+      border-radius: 12px;
+      text-align: left;
+      font-family: Arial, sans-serif;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .reconocido small {
+      color: #8f9cac;
+    }
+
+    #textoReconocido {
+      margin-top: 7px;
+      font-size: 17px;
+      min-height: 24px;
+    }
+
+    #comando {
+      min-height: 32px;
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #ead28e;
+    }
+
+    .ondas {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      height: 32px;
+      margin-top: 15px;
+    }
+
+    .ondas span {
+      width: 5px;
+      height: 10px;
+      background: #69db8b;
+      border-radius: 4px;
+      animation: voz 1s infinite ease-in-out;
+    }
+
+    .ondas span:nth-child(2) {
+      animation-delay: .1s;
+    }
+
+    .ondas span:nth-child(3) {
+      animation-delay: .2s;
+    }
+
+    .ondas span:nth-child(4) {
+      animation-delay: .3s;
+    }
+
+    .ondas span:nth-child(5) {
+      animation-delay: .4s;
+    }
+
+    @keyframes voz {
+      0%, 100% {
+        height: 8px;
+      }
+
+      50% {
+        height: 30px;
+      }
+    }
+
+    .escuchando {
+      color: #70e091;
+    }
+
+    .reproduciendo {
+      color: #e6ce8d;
+    }
+
+    .detenido {
+      color: #aec7ec;
+    }
+
+    @media (max-width: 600px) {
+      .contenedor {
+        padding: 25px 18px;
+      }
+
+      h1 {
+        font-size: 29px;
+      }
+
+      .subtitulo {
+        font-size: 17px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+  <div class="varita">🪄</div>
+
+  <h1>Ministerio Secretarial de la Magia</h1>
+
+  <div class="subtitulo">
+    Control Mágico por Voz
+  </div>
+
+  <div class="estado">
+
+    <div id="estadoPrincipal">
+      🔮 Sistema preparado
+    </div>
+
+    <div id="estadoSecundario">
+      Presiona “Activar magia” para comenzar.
+    </div>
+
+    <div class="ondas" id="ondas">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+  </div>
+
+  <button id="activar">
+    🪄 ACTIVAR MAGIA
+  </button>
+
+  <button id="desactivar">
+    🔇 DESACTIVAR ESCUCHA
+  </button>
+
+  <div class="reconocido">
+
+    <small>
+      🎙️ El micrófono escuchó:
+    </small>
+
+    <div id="textoReconocido">
+      —
+    </div>
+
+  </div>
+
+  <div id="comando"></div>
+
+</div>
+
+
+<audio
+  id="musicaHarry"
+  src="harry potter.mp3"
+  preload="auto"
+  loop>
+</audio>
+
+
+<script>
+
+const audio = document.getElementById("musicaHarry");
+
+const botonActivar =
+  document.getElementById("activar");
+
+const botonDesactivar =
+  document.getElementById("desactivar");
+
+const estadoPrincipal =
+  document.getElementById("estadoPrincipal");
+
+const estadoSecundario =
+  document.getElementById("estadoSecundario");
+
+const textoReconocido =
+  document.getElementById("textoReconocido");
+
+const comando =
+  document.getElementById("comando");
+
+const ondas =
+  document.getElementById("ondas");
+
+
+let reconocimiento = null;
+
+let sistemaActivo = false;
+
+let escuchando = false;
+
+
+
+// ========================================================
+// COMPROBAR SOPORTE DEL NAVEGADOR
+// ========================================================
+
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+
+if (!SpeechRecognition) {
+
+  estadoPrincipal.innerHTML =
+    "⚠️ Reconocimiento de voz no compatible";
+
+  estadoSecundario.innerHTML =
+    "Utiliza Google Chrome.";
+
+  botonActivar.disabled = true;
+
+}
+
+
+
+// ========================================================
+// NORMALIZAR TEXTO
+// ========================================================
+
+function normalizar(texto) {
+
+  return texto
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[.,!?¿¡:;]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+}
+
+
+
+// ========================================================
+// VARIANTES ACCIO
+// ========================================================
+
+function detectarAccio(texto) {
+
+  const variantes = [
+
+    "accio secretariado",
+    "acio secretariado",
+    "asio secretariado",
+    "accio secretaria",
+    "acio secretaria",
+    "asio secretaria",
+    "acción secretariado"
+
+  ];
+
+
+  return variantes.some(
+    frase => texto.includes(frase)
+  );
+
+}
+
+
+
+// ========================================================
+// VARIANTES FINITE INCANTATEM
+// ========================================================
+
+function detectarFinite(texto) {
+
+  const variantes = [
+
+    "finite incantatem",
+    "finite encantatem",
+    "finite incantaten",
+    "finite encantaten",
+    "finiti incantatem",
+    "finiti encantatem",
+    "finite incantate",
+    "finite encantate"
+
+  ];
+
+
+  return variantes.some(
+    frase => texto.includes(frase)
+  );
+
+}
+
+
+
+// ========================================================
+// CREAR RECONOCIMIENTO
+// ========================================================
+
+function crearReconocimiento() {
+
+  reconocimiento =
+    new SpeechRecognition();
+
+
+  reconocimiento.lang =
+    "es-CR";
+
+
+  reconocimiento.continuous =
+    true;
+
+
+  reconocimiento.interimResults =
+    true;
+
+
+  reconocimiento.maxAlternatives =
+    3;
+
+
+
+  reconocimiento.onstart =
+    function() {
+
+      escuchando = true;
+
+      estadoPrincipal.innerHTML =
+        "🎙️ Escuchando hechizos...";
+
+      estadoPrincipal.className =
+        "escuchando";
+
+      estadoSecundario.innerHTML =
+        "El Ministerio está atento a tus órdenes.";
+
+      ondas.style.display =
+        "flex";
+
+    };
+
+
+
+  reconocimiento.onresult =
+    function(event) {
+
+      let texto = "";
+
+
+      for (
+        let i = event.resultIndex;
+        i < event.results.length;
+        i++
+      ) {
+
+        texto +=
+          event.results[i][0].transcript;
+
+      }
+
+
+      textoReconocido.textContent =
+        texto;
+
+
+      const limpio =
+        normalizar(texto);
+
+
+      if (
+        detectarFinite(limpio)
+      ) {
+
+        detenerMusica();
+        return;
+
+      }
+
+
+      if (
+        detectarAccio(limpio)
+      ) {
+
+        reproducirMusica();
+
+      }
+
+    };
+
+
+
+  reconocimiento.onerror =
+    function(event) {
+
+      console.log(
+        "Error:",
+        event.error
+      );
+
+
+      if (
+        event.error ===
+        "not-allowed"
+      ) {
+
+        sistemaActivo =
+          false;
+
+        estadoPrincipal.innerHTML =
+          "🚫 Micrófono bloqueado";
+
+        estadoSecundario.innerHTML =
+          "Permite el acceso al micrófono en Chrome.";
+
+        ondas.style.display =
+          "none";
+
+
+        botonActivar.style.display =
+          "block";
+
+        botonDesactivar.style.display =
+          "none";
+
+      }
+
+
+      else if (
+        event.error ===
+        "no-speech"
+      ) {
+
+        estadoSecundario.innerHTML =
+          "No se detectó voz. Continúo escuchando...";
+
+      }
+
+
+      else {
+
+        estadoSecundario.innerHTML =
+          "Reconectando el oído mágico...";
+
+      }
+
+    };
+
+
+
+  reconocimiento.onend =
+    function() {
+
+      escuchando =
+        false;
+
+
+      if (
+        sistemaActivo
+      ) {
+
+        setTimeout(
+          reiniciarReconocimiento,
+          500
+        );
+
+      }
+
+    };
+
+}
+
+
+
+// ========================================================
+// REINICIAR AUTOMÁTICAMENTE
+// ========================================================
+
+function reiniciarReconocimiento() {
+
+  if (
+    !sistemaActivo ||
+    escuchando
+  ) {
+
+    return;
+
+  }
+
+
+  try {
+
+    reconocimiento.start();
+
+  }
+
+  catch(error) {
+
+    console.log(
+      "Reinicio:",
+      error
+    );
+
+  }
+
+}
+
+
+
+// ========================================================
+// ACTIVAR MAGIA
+// ========================================================
+
+botonActivar.addEventListener(
+
+  "click",
+
+  async function() {
+
+
+    if (
+      !SpeechRecognition
+    ) {
+
+      return;
+
+    }
+
+
+    // Desbloquear el audio después del clic del usuario.
+
+    try {
+
+      audio.volume =
+        0;
+
+      await audio.play();
+
+      audio.pause();
+
+      audio.currentTime =
+        0;
+
+      audio.volume =
+        1;
+
+    }
+
+    catch(error) {
+
+      console.log(
+        "Desbloqueo de audio:",
+        error
+      );
+
+    }
+
+
+    sistemaActivo =
+      true;
+
+
+    crearReconocimiento();
+
+
+    try {
+
+      reconocimiento.start();
+
+    }
+
+    catch(error) {
+
+      console.error(
+        error
+      );
+
+
+      estadoPrincipal.innerHTML =
+        "⚠️ No fue posible activar el micrófono";
+
+      estadoSecundario.innerHTML =
+        "Revisa los permisos de Chrome.";
+
+    }
+
+
+    botonActivar.style.display =
+      "none";
+
+
+    botonDesactivar.style.display =
+      "block";
+
+  }
+
+);
+
+
+
+// ========================================================
+// ACCIO SECRETARIADO
+// ========================================================
+
+function reproducirMusica() {
+
+
+  if (
+    !audio.paused
+  ) {
+
+    return;
+
+  }
+
+
+  audio.currentTime =
+    0;
+
+
+  audio.play()
+
+    .then(() => {
+
+      estadoPrincipal.innerHTML =
+        "🎵 Música activada";
+
+      estadoPrincipal.className =
+        "reproduciendo";
+
+      estadoSecundario.innerHTML =
+        "El hechizo ha sido ejecutado.";
+
+      comando.innerHTML =
+        "🪄 axio secretariado";
+
+
+      setTimeout(
+        mostrarEscuchando,
+        3000
+      );
+
+    })
+
+    .catch(error => {
+
+      console.error(
+        error
+      );
+
+      comando.innerHTML =
+        "⚠️ No fue posible reproducir el audio.";
+
+    });
+
+}
+
+
+
+// ========================================================
+// FINITE INCANTATEM
+// ========================================================
+
+function detenerMusica() {
+
+
+  audio.pause();
+
+  audio.currentTime =
+    0;
+
+
+  estadoPrincipal.innerHTML =
+    "🔇 Música detenida";
+
+  estadoPrincipal.className =
+    "detenido";
+
+
+  estadoSecundario.innerHTML =
+    "El encantamiento ha finalizado.";
+
+
+  comando.innerHTML =
+    "✨ finite incantatem";
+
+
+  setTimeout(
+    mostrarEscuchando,
+    3000
+  );
+
+}
+
+
+
+// ========================================================
+// VOLVER A MOSTRAR ESCUCHANDO
+// ========================================================
+
+function mostrarEscuchando() {
+
+  if (
+    sistemaActivo
+  ) {
+
+    estadoPrincipal.innerHTML =
+      "🎙️ Escuchando hechizos...";
+
+    estadoPrincipal.className =
+      "escuchando";
+
+    estadoSecundario.innerHTML =
+      "El Ministerio está atento a tus órdenes.";
+
+    comando.innerHTML =
+      "";
+
+  }
+
+}
+
+
+
+// ========================================================
+// DESACTIVAR
+// ========================================================
+
+botonDesactivar.addEventListener(
+
+  "click",
+
+  function() {
+
+
+    sistemaActivo =
+      false;
+
+
+    if (
+      reconocimiento
+    ) {
+
+      try {
+
+        reconocimiento.stop();
+
+      }
+
+      catch(error) {
+
+        console.log(
+          error
+        );
+
+      }
+
+    }
+
+
+    ondas.style.display =
+      "none";
+
+
+    estadoPrincipal.innerHTML =
+      "🔮 Sistema en espera";
+
+
+    estadoPrincipal.className =
+      "";
+
+
+    estadoSecundario.innerHTML =
+      "Presiona “Activar magia” para comenzar.";
+
+
+    botonActivar.style.display =
+      "block";
+
+
+    botonDesactivar.style.display =
+      "none";
+
+  }
+
+);
+
+</script>
+
+</body>
+</html>
