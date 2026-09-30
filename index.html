@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Ministerio Secretarial de la Magia</title>
+  <title>Control Mágico por Voz</title>
 
   <style>
     * {
@@ -43,11 +43,10 @@
       margin-bottom: 10px;
     }
 
-    
     .subtitulo {
       margin-top: 10px;
       color: #b8c7dc;
-      font-size: 20px;
+      font-size: 24px;
     }
 
     .estado {
@@ -98,26 +97,26 @@
 
     .reconocido {
       margin-top: 30px;
-      background: rgba(0,0,0,.3);
-      padding: 16px;
+      background: rgba(0, 0, 0, .3);
+      padding: 18px;
       border-radius: 12px;
       text-align: left;
       font-family: Arial, sans-serif;
-      border: 1px solid rgba(255,255,255,.08);
+      border: 1px solid rgba(255, 255, 255, .08);
     }
 
     .reconocido small {
-        color: #8f9cac;
-        font-size: 18px;
-        }
+      color: #8f9cac;
+      font-size: 18px;
+    }
 
     #textoReconocido {
-        margin-top: 10px;
-        font-size: 28px;
-        min-height: 38px;
-        font-weight: bold;
-        color: #ffffff;
-        line-height: 1.4;
+      margin-top: 10px;
+      font-size: 28px;
+      min-height: 38px;
+      font-weight: bold;
+      color: #ffffff;
+      line-height: 1.4;
     }
 
     #comando {
@@ -188,9 +187,12 @@
         padding: 25px 18px;
       }
 
-      
       .subtitulo {
-        font-size: 17px;
+        font-size: 20px;
+      }
+
+      #textoReconocido {
+        font-size: 24px;
       }
     }
   </style>
@@ -261,7 +263,8 @@
 
 <script>
 
-const audio = document.getElementById("musicaHarry");
+const audio =
+  document.getElementById("musicaHarry");
 
 const botonActivar =
   document.getElementById("activar");
@@ -286,11 +289,8 @@ const ondas =
 
 
 let reconocimiento = null;
-
 let sistemaActivo = false;
-
 let escuchando = false;
-
 
 
 // ========================================================
@@ -315,7 +315,6 @@ if (!SpeechRecognition) {
 }
 
 
-
 // ========================================================
 // NORMALIZAR TEXTO
 // ========================================================
@@ -333,26 +332,16 @@ function normalizar(texto) {
 }
 
 
-
 // ========================================================
-// VARIANTES ACCIO
+// DETECTAR: SECRETARIAL
 // ========================================================
 
-function detectarAccio(texto) {
+function detectarInicio(texto) {
 
   const variantes = [
-
-    "axio secretariado",
-    "accio secretariado",
-    "acio secretariado",
-    "asio secretariado",
-    "accio secretaria",
-    "acio secretaria",
-    "asio secretaria",
-    "acción secretariado"
-
+    "secretarial",
+    "secretaria"
   ];
-
 
   return variantes.some(
     frase => texto.includes(frase)
@@ -361,33 +350,22 @@ function detectarAccio(texto) {
 }
 
 
-
 // ========================================================
-// VARIANTES FINITE INCANTATEM
+// DETECTAR: REALIZADA
 // ========================================================
 
-function detectarFinite(texto) {
+function detectarFin(texto) {
 
   const variantes = [
-
-    "finite incantatem",
-    "finite encantatem",
-    "finite incantaten",
-    "finite encantaten",
-    "finiti incantatem",
-    "finiti encantatem",
-    "finite incantate",
-    "finite encantate"
-
+    "realizada",
+    "realizado"
   ];
-
 
   return variantes.some(
     frase => texto.includes(frase)
   );
 
 }
-
 
 
 // ========================================================
@@ -399,22 +377,17 @@ function crearReconocimiento() {
   reconocimiento =
     new SpeechRecognition();
 
-
   reconocimiento.lang =
     "es-CR";
-
 
   reconocimiento.continuous =
     true;
 
-
   reconocimiento.interimResults =
     true;
 
-
   reconocimiento.maxAlternatives =
     3;
-
 
 
   reconocimiento.onstart =
@@ -437,12 +410,10 @@ function crearReconocimiento() {
     };
 
 
-
   reconocimiento.onresult =
     function(event) {
 
       let texto = "";
-
 
       for (
         let i = event.resultIndex;
@@ -455,17 +426,17 @@ function crearReconocimiento() {
 
       }
 
-
       textoReconocido.textContent =
         texto;
-
 
       const limpio =
         normalizar(texto);
 
 
+      // Primero comprobar la orden para detener.
+
       if (
-        detectarFinite(limpio)
+        detectarFin(limpio)
       ) {
 
         detenerMusica();
@@ -474,8 +445,10 @@ function crearReconocimiento() {
       }
 
 
+      // Luego comprobar la orden para reproducir.
+
       if (
-        detectarAccio(limpio)
+        detectarInicio(limpio)
       ) {
 
         reproducirMusica();
@@ -483,7 +456,6 @@ function crearReconocimiento() {
       }
 
     };
-
 
 
   reconocimiento.onerror =
@@ -511,7 +483,6 @@ function crearReconocimiento() {
 
         ondas.style.display =
           "none";
-
 
         botonActivar.style.display =
           "block";
@@ -543,13 +514,11 @@ function crearReconocimiento() {
     };
 
 
-
   reconocimiento.onend =
     function() {
 
       escuchando =
         false;
-
 
       if (
         sistemaActivo
@@ -567,9 +536,8 @@ function crearReconocimiento() {
 }
 
 
-
 // ========================================================
-// REINICIAR AUTOMÁTICAMENTE
+// REINICIAR RECONOCIMIENTO
 // ========================================================
 
 function reiniciarReconocimiento() {
@@ -602,7 +570,6 @@ function reiniciarReconocimiento() {
 }
 
 
-
 // ========================================================
 // ACTIVAR MAGIA
 // ========================================================
@@ -623,7 +590,7 @@ botonActivar.addEventListener(
     }
 
 
-    // Desbloquear el audio después del clic del usuario.
+    // Desbloquear el audio mediante la interacción del usuario.
 
     try {
 
@@ -655,7 +622,6 @@ botonActivar.addEventListener(
     sistemaActivo =
       true;
 
-
     crearReconocimiento();
 
 
@@ -671,7 +637,6 @@ botonActivar.addEventListener(
         error
       );
 
-
       estadoPrincipal.innerHTML =
         "⚠️ No fue posible activar el micrófono";
 
@@ -684,7 +649,6 @@ botonActivar.addEventListener(
     botonActivar.style.display =
       "none";
 
-
     botonDesactivar.style.display =
       "block";
 
@@ -693,13 +657,12 @@ botonActivar.addEventListener(
 );
 
 
-
 // ========================================================
-// ACCIO SECRETARIADO
+// REPRODUCIR MÚSICA
+// COMANDO: SECRETARIAL
 // ========================================================
 
 function reproducirMusica() {
-
 
   if (
     !audio.paused
@@ -725,10 +688,10 @@ function reproducirMusica() {
         "reproduciendo";
 
       estadoSecundario.innerHTML =
-        "El hechizo ha sido ejecutado.";
+        "La magia ha comenzado.";
 
       comando.innerHTML =
-        "🪄 axio secretariado";
+        "🪄 SECRETARIAL";
 
 
       setTimeout(
@@ -752,13 +715,12 @@ function reproducirMusica() {
 }
 
 
-
 // ========================================================
-// FINITE INCANTATEM
+// DETENER MÚSICA
+// COMANDO: REALIZADA
 // ========================================================
 
 function detenerMusica() {
-
 
   audio.pause();
 
@@ -778,7 +740,7 @@ function detenerMusica() {
 
 
   comando.innerHTML =
-    "✨ finite incantatem";
+    "✨ REALIZADA";
 
 
   setTimeout(
@@ -789,9 +751,8 @@ function detenerMusica() {
 }
 
 
-
 // ========================================================
-// VOLVER A MOSTRAR ESCUCHANDO
+// VOLVER AL ESTADO DE ESCUCHA
 // ========================================================
 
 function mostrarEscuchando() {
@@ -817,9 +778,8 @@ function mostrarEscuchando() {
 }
 
 
-
 // ========================================================
-// DESACTIVAR
+// DESACTIVAR ESCUCHA
 // ========================================================
 
 botonDesactivar.addEventListener(
@@ -831,6 +791,14 @@ botonDesactivar.addEventListener(
 
     sistemaActivo =
       false;
+
+
+    // Detener también la música.
+
+    audio.pause();
+
+    audio.currentTime =
+      0;
 
 
     if (
@@ -868,6 +836,14 @@ botonDesactivar.addEventListener(
 
     estadoSecundario.innerHTML =
       "Presiona “Activar magia” para comenzar.";
+
+
+    textoReconocido.textContent =
+      "—";
+
+
+    comando.innerHTML =
+      "";
 
 
     botonActivar.style.display =
